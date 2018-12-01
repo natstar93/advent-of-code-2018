@@ -1,20 +1,20 @@
 var fs = require('fs');
 var path = require('path');
 
-const frequencies = [];
+const frequencies = {};
 let isRepeatFrequencyFound = false;
 let initialFrequency = 0;
 
 const findFrequency = async (frequencyChanges) => {
   while (!isRepeatFrequencyFound) {
     const freq = await frequencyChanges.reduce((acc, str) => {
-      const currentFrequency = acc + parseInt(str);
-      if (frequencies.find(fr => fr === currentFrequency)) {
-        console.log(currentFrequency + ' was the first frequency to be reached twice');
+      const currentFrequency = str ? acc + parseInt(str) : acc;
+      if (frequencies[currentFrequency]) {
+        console.log(currentFrequency + ' was the first frequency to be reached twice\n');
         isRepeatFrequencyFound = true;
-        return;
+        throw Error('Done!');
       }
-      frequencies.push(currentFrequency);
+      frequencies[currentFrequency] = true;
       return currentFrequency;
     }, initialFrequency);
     initialFrequency = freq;
